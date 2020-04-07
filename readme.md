@@ -22,7 +22,7 @@ catkin build
 source devel/setup.bash
 roslaunch traffic_analysis_from_drones track_traffic.launch
 ```
-The file 'car_tracker.py' isn't done. This file take the image from 'stabilized_frame' and mark the image with a red circle.
+The file ('car_tracker.py') isn't done. This file take the image from ('stabilized_frame') and mark the image with a red circle.
 
 The output of this file is stable frame.
 
