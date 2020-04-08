@@ -17,7 +17,7 @@ git submodule update
 
 Build and launch.
 ```
-source /opt/ros/melodic/setup.bash
+This may not be needed -> source /opt/ros/melodic/setup.bash  
 catkin build
 source devel/setup.bash
 roslaunch traffic_analysis_from_drones track_traffic.launch
@@ -26,4 +26,12 @@ The file ('car_tracker.py') isn't done. This file take the image from ('stabiliz
 
 The output of this file is stable frame.
 
-# Ex3
+# Ex3 - Martin
+
+# Ex4 - Rasmus
+
+# Ex5 - Nicolai
+
+# Ex6 - Martin
+
+# Ex7 - Rasmus
