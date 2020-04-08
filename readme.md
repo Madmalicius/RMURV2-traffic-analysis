@@ -26,7 +26,7 @@ The file ('car_tracker.py') isn't done. This file take the image from ('stabiliz
 
 The output of this file is stable frame.
 
-For having a rosbag with snippit of the stable frame(30sec)
+For having a rosbag with snippit of the stable frame(30sec) - the rosbag is under src, where the 2 other folder is(traffic_analysis_from_drones, video_stabilizer_node).
 ```
 roslaunch traffic_analysis_from_drones CreateRosbag_stableFrame.launch
 ```
