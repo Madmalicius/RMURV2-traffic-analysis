@@ -13,6 +13,6 @@
 	<node name="stabilizer" pkg="video_stabilizer_node" type="stabilizer.py" />
 
 	<!-- Record the stableFrame to a rosbag(30sec size) to for easier development-->
-	<node pkg="rosbag" type="record" name="stableframe_ROSbag" args=" video_frame --duration=30  --output-name='$(find traffic_analysis_from_drones)/../Stableframe.bag' " output="screen" />  <!--output="screen"-->
+	<node pkg="rosbag" type="record" name="stableframe_ROSbag" args=" stabilized_frame --duration=30  --output-name='$(find traffic_analysis_from_drones)/../Stableframe.bag' " output="screen" />  <!--output="screen"-->
 
 </launch>
