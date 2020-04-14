@@ -15,12 +15,13 @@ backSub = cv2.createBackgroundSubtractorMOG2(history=10, varThreshold=20, detect
 #Create mask for only road detection
 mask = cv2.inRange(paint_img, (0, 0, 240 ), (40, 40, 255))  #<<<<----- SHould this be used?
 
-init = 1
+#Used for still image saving
+#init = 1
 
 bag=rosbag.Bag('../Stableframe.bag')
 bridge=CvBridge()
 
-#Values for
+#Values for roi
 y_init = 450
 x_init = 520
 w_init = 595-520
@@ -32,13 +33,10 @@ check = np.zeros((4,1))
 
 # Counter for detecting if a car is outside image
 counter = 0
-temp_x = 0
-temp_y = 0
-temp_w = 0
-temp_h = 0
 
 for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic is found by the cmd-line " rosbag info Stableframe.bag"
     '''
+    #Print still image to use for mask
     if init == 1:
         stillframe=bridge.imgmsg_to_cv2(msg,"bgr8")
         cv2.imwrite("still.jpg", stillframe)
@@ -48,11 +46,14 @@ for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic
 
     #ret, frame = cap.read()
     stream = cv2.bitwise_and(frame, frame, mask=mask)
-    #stream = cv2.bitwise_and(frame, frame)
+    
     #Apply background subtraction
     fgMask = backSub.apply(stream)
+    
+    #Apply roi
     roi = fgMask[x_init:x_init+w_init, y_init:y_init+h_init]
     roi_frame = frame[x_init:x_init+w_init, y_init:y_init+h_init]
+    
     #Detect contours
     _, contours, _ = cv2.findContours(roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
@@ -86,6 +87,6 @@ for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic
     cv2.imshow("feed", roi_frame)
     cv2.imshow("mask", roi)
 
-
+    #Cancel with escape
     if cv2.waitKey(30) == 27:
         break
