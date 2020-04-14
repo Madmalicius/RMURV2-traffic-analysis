@@ -4,7 +4,7 @@ import numpy as np
 
 #Load files
 cap = cv2.VideoCapture('../traffic_analysis_from_drones/data/traffic_video_dyrskuepladsen.mp4')
-paintedfile = "still_painted1.jpg"
+paintedfile = "still_painted.jpg"
 paint_img= cv2.imread(paintedfile)
 #Initialize background subtractor
 backSub = cv2.createBackgroundSubtractorMOG2(history=10, varThreshold=20, detectShadows=False)
@@ -14,13 +14,13 @@ _, stillframe = cap.read()
 cv2.imwrite("still.jpg", stillframe)
 """
 #Create mask for only road detection
-#mask = cv2.inRange(paint_img, (0, 0, 240 ), (40, 40, 255))  <<<<----- SHould this be used?
+mask = cv2.inRange(paint_img, (0, 0, 240 ), (40, 40, 255))  #<<<<----- SHould this be used?
 
 while cap.isOpened():
 
     ret, frame = cap.read()
-    #stream = cv2.bitwise_and(frame, frame, mask=mask)
-    stream = cv2.bitwise_and(frame, frame)
+    stream = cv2.bitwise_and(frame, frame, mask=mask)
+    #stream = cv2.bitwise_and(frame, frame)
     #Apply background subtraction
     fgMask = backSub.apply(stream)
 

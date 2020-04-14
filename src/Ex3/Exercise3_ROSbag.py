@@ -20,6 +20,23 @@ init = 1
 bag=rosbag.Bag('../Stableframe.bag')
 bridge=CvBridge()
 
+#Values for
+y_init = 450
+x_init = 520
+w_init = 595-520
+h_init = 656-470
+
+# Columns = max tracked cars
+cars = np.zeros((4,2))
+check = np.zeros((4,1))
+
+# Counter for detecting if a car is outside image
+counter = 0
+temp_x = 0
+temp_y = 0
+temp_w = 0
+temp_h = 0
+
 for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic is found by the cmd-line " rosbag info Stableframe.bag"
     '''
     if init == 1:
@@ -34,24 +51,40 @@ for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic
     #stream = cv2.bitwise_and(frame, frame)
     #Apply background subtraction
     fgMask = backSub.apply(stream)
-
+    roi = fgMask[x_init:x_init+w_init, y_init:y_init+h_init]
+    roi_frame = frame[x_init:x_init+w_init, y_init:y_init+h_init]
     #Detect contours
-    _, contours, _ = cv2.findContours(fgMask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
-    #Draw squares around contours
+    #Draw squares around contours and save the coordinates in an array
     for contour in contours:
         (x, y, w, h) = cv2.boundingRect(contour)
 
         if cv2.contourArea(contour) < 50:
             continue
-        cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
-
-    cv2.rectangle(frame, (10,2), (100,2), (255,255,255), -1)
-    #cv2.putText(frame, str(cap.get(cv2.CAP_PROP_POS_FRAMES)), (15, 15),
-    #        cv2.FONT_HERSHEY_SIMPLEX, 0.5 , (0,0,0))
-
-    cv2.imshow("feed", frame)
-    cv2.imshow("mask", fgMask)
+        cv2.rectangle(roi_frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
+        
+        #Check if the car is already tracked, if so update. Else give spot on array
+        for k in range(len(cars)):
+            if cars[k, 0]-x <= 15 and cars[k, 1]-y <= 15:
+                cars[k, 0] = x
+                cars[k, 1] = y
+                check[k] +=1
+                break
+    #print(cars)    
+    
+    #Check if car is still in frame for tracking every 5 frames
+    counter +=1
+    if counter == 5:
+        for k in range(len(cars)):
+            if check[k] == 0:
+                cars[k, 0] = 0
+                cars[k, 1] = 0
+            check[k] = 0
+        counter = 0
+    
+    cv2.imshow("feed", roi_frame)
+    cv2.imshow("mask", roi)
 
 
     if cv2.waitKey(30) == 27:
