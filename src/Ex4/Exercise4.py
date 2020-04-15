@@ -1,0 +1,19 @@
+import cv2
+import numpy as np
+
+def perspective_transform(image):
+
+    googleCoords = np.array([[185,308],[774,327],[557,575],[151,479]], dtype="float32") # Order of points: grey house, red house, red shag, grey shag
+    stillCoords = np.array([[464,467],[566,196],[823,280],[752,543]], dtype="float32")# Order of points: grey house, red house, red shag, grey shag
+
+    M = cv2.getPerspectiveTransform(stillCoords, googleCoords)
+
+    warped = cv2.warpPerspective(image, M, (1280, 720))
+
+    return warped
+
+imgWarp = perspective_transform(cv2.imread("still.jpg"))
+cv2.imshow("Warped", imgWarp)
+cv2.imwrite("warpedStill.jpg", imgWarp)
+
+cv2.waitKey(0)
