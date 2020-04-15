@@ -5,6 +5,7 @@ from std_msgs.msg import Int32, String
 import cv2
 import numpy as np 
 from cv_bridge import CvBridge, CvBridgeError
+from Exercise4 import perspective_transform
 
 #Load files
 #cap = cv2.VideoCapture('../traffic_analysis_from_drones/data/traffic_video_dyrskuepladsen.mp4')
@@ -44,7 +45,9 @@ for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic
         cv2.imwrite("still.jpg", stillframe)
         init = 0
     '''
-    frame=bridge.imgmsg_to_cv2(msg,"bgr8")
+    frame = bridge.imgmsg_to_cv2(msg,"bgr8")
+
+    frame = perspective_transform(frame)
 
     #ret, frame = cap.read()
     stream = cv2.bitwise_and(frame, frame, mask=mask)
