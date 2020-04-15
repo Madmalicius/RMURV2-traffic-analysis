@@ -15,12 +15,12 @@ backSub = cv2.createBackgroundSubtractorMOG2(history=10, varThreshold=20, detect
 
 
 #Create mask for only road detection
-mask = cv2.inRange(paint_img, (0, 0, 240 ), (40, 40, 255))  #<<<<----- SHould this be used?
+mask = cv2.inRange(paint_img, (0, 0, 240 ), (40, 40, 255))
 
 #Used for still image saving
 #init = 1
 
-bag=rosbag.Bag('../Stableframe.bag')
+bag=rosbag.Bag('../../Stableframe.bag')
 bridge=CvBridge()
 
 #Values for roi
