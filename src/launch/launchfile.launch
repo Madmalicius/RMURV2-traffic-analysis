@@ -1,0 +1,5 @@
+<launch>
+
+        <node pkg="detection_and_tracking" type="Exercise3_ROSbag.py" name="detection_and_tracking" />
+
+</launch>
