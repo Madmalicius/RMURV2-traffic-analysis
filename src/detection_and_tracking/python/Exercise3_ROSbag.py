@@ -16,20 +16,24 @@ backSub = cv2.createBackgroundSubtractorMOG2(history=10, varThreshold=20, detect
 
 
 #Create mask for only road detection
-mask = cv2.inRange(paint_img, (0, 0, 240 ), (40, 40, 255))
+mask = cv2.inRange(perspective_transform(paint_img), (0, 0, 240 ), (40, 40, 255))
 
 #Used for still image saving
 #init = 1
 
 bag=rosbag.Bag('../../Stableframe.bag')
 bridge=CvBridge()
-
+"""
 #Values for roi
 y_init = 450
 x_init = 520
 w_init = 595-520
 h_init = 656-470
-
+"""
+y_init = 160
+x_init = 375
+h_init = 445-160
+w_init = 528-375
 # Columns = max tracked cars
 cars = np.zeros((4,2))
 check = np.zeros((4,1))
@@ -66,7 +70,7 @@ for topic, msg, t in bag.read_messages(topics=['stabilized_frame']): # The topic
     for contour in contours:
         (x, y, w, h) = cv2.boundingRect(contour)
 
-        if cv2.contourArea(contour) < 50:
+        if cv2.contourArea(contour) < 20:
             continue
         cv2.rectangle(roi_frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
         

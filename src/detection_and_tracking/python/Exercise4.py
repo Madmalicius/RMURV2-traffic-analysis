@@ -48,10 +48,10 @@ def distance_per_pixel():
 
     return meterDist / pixelDist
 
-imgWarp = perspective_transform(cv2.imread("still_painted.jpg"))
-cv2.imshow("Warped", imgWarp)
-cv2.imwrite("warpedStill.jpg", imgWarp)
+#imgWarp = perspective_transform(cv2.imread("still_painted.jpg"))
+#cv2.imshow("Warped", imgWarp)
+#cv2.imwrite("warpedStill.jpg", imgWarp)
 
-print("meter pr. pixel:",distance_per_pixel(),"m/px")
+#print("meter pr. pixel:",distance_per_pixel(),"m/px")
 
-cv2.waitKey(0)
+#cv2.waitKey(0)
