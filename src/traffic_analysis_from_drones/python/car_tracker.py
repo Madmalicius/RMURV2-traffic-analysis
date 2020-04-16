@@ -29,7 +29,7 @@ class CarTracker():
     def __init__(self):
         pass
     # Columns = max tracked cars
-    cars = np.zeros((15,4))
+    cars = np.zeros((15,12))
     check = np.zeros((15,1))
 
     #kfIndex=0 
@@ -65,8 +65,13 @@ class CarTracker():
             for k in range(len(self.cars)):
                 if self.cars[k, 0]-x <= 30 and self.cars[k, 1]-y <= 8:
                     #kF_obj=kalman(x,y,self.kfIndex)
-                    self.cars[k, 2] = self.cars[k, 0]
-                    self.cars[k, 3] = self.cars[k, 1]
+                    if (self.cars[k, 11] == 0 and self.cars[k, 10] == 0 and self.cars[k, 9] == 0):
+                        for i in range(5):
+                            self.cars[k, i+2] = x
+                            self.cars[k, i+3] = y
+                    for i in range(4):
+                        self.cars[k, 11-2*i] = self.cars[k, 11-(2*i+2)]
+                        self.cars[k, 11-(2*i+1)] = self.cars[k, 11-(2*i+3)]
                     self.cars[k, 0] = x
                     self.cars[k, 1] = y
                     #kF_obj.run_filter(x,y)
@@ -74,7 +79,7 @@ class CarTracker():
                     #self.kfIndex+=1
                     #self.kalmanFilters.append(kF_obj)
                     cv2.putText(roi_frame, "ID:"+str(k), (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
-                    cv2.putText(roi_frame, "v = "+str(velocity([x,y],[self.cars[k,2],self.cars[k,3]])), (x,y-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+                    cv2.putText(roi_frame, "v = "+str(velocity(self.cars[k, :])), (x,y-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
                     break
         #print(cars)    
         

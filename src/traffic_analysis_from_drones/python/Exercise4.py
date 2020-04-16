@@ -19,10 +19,11 @@ def perspective_transform(image):
 
     return warped
 
-def velocity(currCoords, prevCoords):
+def velocity(savedCoords):
 
     R = 6373.0 #Approx radius of the earth in km
     frameRate = 20
+    difPixel = 0
 
     latGreyShag = radians(55.381893)
     lonGreyShag = radians(10.363923)
@@ -46,8 +47,11 @@ def velocity(currCoords, prevCoords):
     #print("pixelDist:",pixelDist)
 
     meterPrPixel = meterDist / pixelDist
-    difPixel = sqrt((currCoords[0]-prevCoords[0])**2+(currCoords[1]-prevCoords[1])**2)
+    for i in range(len(savedCoords)-3):
+        difPixel += sqrt((savedCoords[i]-savedCoords[i+1])**2+(savedCoords[i+2]-savedCoords[i+3])**2)
+
+    difPixel = difPixel / (len(savedCoords)*2)
 
     vel = (difPixel * meterPrPixel) * frameRate * 3.6
 
-    return vel
+    return int(vel)
