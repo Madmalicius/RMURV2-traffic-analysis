@@ -11,6 +11,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from Exercise4 import perspective_transform, velocity
+#from kalman_class import kalman 
 
 paintedfile = "still_painted.jpg"
 paint_img= cv2.imread(paintedfile)
@@ -31,6 +32,9 @@ class CarTracker():
     cars = np.zeros((15,4))
     check = np.zeros((15,1))
 
+    #kfIndex=0 
+    #kalmanFilters = []
+    
     # Counter for detecting if a car is outside image
     counter = 0
 
@@ -60,11 +64,15 @@ class CarTracker():
             #Check if the car is already tracked, if so update. Else give spot on array
             for k in range(len(self.cars)):
                 if self.cars[k, 0]-x <= 30 and self.cars[k, 1]-y <= 8:
+                    #kF_obj=kalman(x,y,self.kfIndex)
                     self.cars[k, 2] = self.cars[k, 0]
                     self.cars[k, 3] = self.cars[k, 1]
                     self.cars[k, 0] = x
                     self.cars[k, 1] = y
+                    #kF_obj.run_filter(x,y)
                     self.check[k] +=1
+                    #self.kfIndex+=1
+                    #self.kalmanFilters.append(kF_obj)
                     cv2.putText(roi_frame, "ID:"+str(k), (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
                     cv2.putText(roi_frame, "v = "+str(velocity([x,y],[self.cars[k,2],self.cars[k,3]])), (x,y-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
                     break

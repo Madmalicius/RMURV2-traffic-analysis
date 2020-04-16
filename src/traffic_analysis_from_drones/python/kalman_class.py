@@ -61,3 +61,7 @@ class kalman():
         self.x, self.y =self.kalm_filt.update([[x_data,y_data]])
         self.x_prev=x
         self.y_prev=y
+    
+    def get_vel(self):
+        vel=[self.kalm_filt.x[1],self.kalm_filt.x[3]]   
+        return vel
