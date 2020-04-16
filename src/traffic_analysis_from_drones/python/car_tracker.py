@@ -66,7 +66,7 @@ class CarTracker():
                     self.cars[k, 1] = y
                     self.check[k] +=1
                     cv2.putText(roi_frame, "ID:"+str(k), (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
-                    cv2.putText(roi_frame, "v = "+str(velocity([x,y],[self.cars[k,2],self.cars[k,3]])), (x,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+                    cv2.putText(roi_frame, "v = "+str(velocity([x,y],[self.cars[k,2],self.cars[k,3]])), (x,y-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
                     break
         #print(cars)    
         
