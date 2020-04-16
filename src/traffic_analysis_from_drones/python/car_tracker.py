@@ -10,7 +10,7 @@ import numpy as np
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-from Exercise4 import perspective_transform
+from Exercise4 import perspective_transform, velocity
 
 paintedfile = "still_painted.jpg"
 paint_img= cv2.imread(paintedfile)
@@ -28,7 +28,7 @@ class CarTracker():
     def __init__(self):
         pass
     # Columns = max tracked cars
-    cars = np.zeros((15,2))
+    cars = np.zeros((15,4))
     check = np.zeros((15,1))
 
     # Counter for detecting if a car is outside image
@@ -47,22 +47,26 @@ class CarTracker():
         roi_frame = frame[x_init:x_init+w_init, y_init:y_init+h_init]
         
         #Detect contours
-        _, contours, _ = cv2.findContours(roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        _, contours, _ = cv2.findContours(roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         
         #Draw squares around contours and save the coordinates in an array
         for contour in contours:
             (x, y, w, h) = cv2.boundingRect(contour)
 
-            if cv2.contourArea(contour) < 20:
+            if cv2.contourArea(contour) < 15:
                 continue
             cv2.rectangle(roi_frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
             
             #Check if the car is already tracked, if so update. Else give spot on array
             for k in range(len(self.cars)):
-                if self.cars[k, 0]-x <= 15 and self.cars[k, 1]-y <= 15:
+                if self.cars[k, 0]-x <= 30 and self.cars[k, 1]-y <= 8:
+                    self.cars[k, 2] = self.cars[k, 0]
+                    self.cars[k, 3] = self.cars[k, 1]
                     self.cars[k, 0] = x
                     self.cars[k, 1] = y
                     self.check[k] +=1
+                    cv2.putText(roi_frame, "ID:"+str(k), (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+                    cv2.putText(roi_frame, "v = "+str(velocity([x,y],[self.cars[k,2],self.cars[k,3]])), (x,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
                     break
         #print(cars)    
         
