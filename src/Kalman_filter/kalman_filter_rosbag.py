@@ -69,8 +69,8 @@ for topic, msg, t in bag.read_messages(topics=['X', 'Y']):
         time_ref_zero = t.to_sec()
         time_first=False
 
-        #data_x = msg.data
-        #print(data_x)
+
+    update_time=t.to_sec()-time_ref_zero  
 
 
     if(topic == 'X'):
@@ -108,6 +108,11 @@ for topic, msg, t in bag.read_messages(topics=['X', 'Y']):
                                     [data_y],           #Y
                                     [data_x-prev_y],    #Y_dot
                                     ])
+
+
+            kalm_filt.update([[data_x,data_y]])
+
+                                    
             updateValue_x.append(kalm_filt.x[0])
             updateValue_y.append(kalm_filt.x[2])   
             first_run = False
@@ -126,6 +131,7 @@ for topic, msg, t in bag.read_messages(topics=['X', 'Y']):
                                     [data_y],           #Y
                                     [data_x-prev_y],    #Y_dot
                                     ])
+            kalm_filt.update([[data_x,data_y]])
             updateValue_x.append(kalm_filt.x[0])
             updateValue_y.append(kalm_filt.x[2])
 
