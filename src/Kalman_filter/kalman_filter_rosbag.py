@@ -142,7 +142,7 @@ bag.close()
 
 
 # Print the standard deviation of the measurements.
-print 'the std for the measurements: ', np.std(M_pos_x)
+print ('the std for the measurements: ', np.std(M_pos_x))
 
 print("time_mesur_x length: ", len(time_mesur_x))
 print("M_x length: ", len(M_pos_x))
